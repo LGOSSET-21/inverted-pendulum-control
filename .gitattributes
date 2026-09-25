@@ -1,6 +1,6 @@
-# Generated standalone visualizations. Keep source templates and scripts detectable.
-visualization/index.html linguist-generated=true
-visualization/double.html linguist-generated=true
-visualization/triple.html linguist-generated=true
-visualization/massive-rods.html linguist-generated=true
-visualization/massive-swingup.html linguist-generated=true
+# Generated standalone visualizations: excluded from GitHub language statistics.
+visualization/index.html linguist-generated
+visualization/double.html linguist-generated
+visualization/triple.html linguist-generated
+visualization/massive-rods.html linguist-generated
+visualization/massive-swingup.html linguist-generated
