@@ -6,10 +6,12 @@ How can one horizontal cart force raise and balance three freely rotating links?
 
 ![Computed massive-rod swing-up](assets/swingup.svg)
 
+**[Project overview](https://LGOSSET-21.github.io/inverted-pendulum-control/) · [Live demo](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-swingup.html) · [Read the report](https://LGOSSET-21.github.io/inverted-pendulum-control/reports/Project_Report.pdf)**
+
 ## Start here
 
 - **[Project report (PDF)](reports/Project_Report.pdf)** — detailed calculations; pages 1–7 cover the massless model and pages 8–9 the massive-rod extension and future work.
-- **[Massive-rod swing-up](visualization/massive-swingup.html)** — download the repository and open this HTML file in a browser. GitHub's file viewer displays source, not the animation.
+- **[Massive-rod swing-up](visualization/massive-swingup.html)** — **[open the live demonstration](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-swingup.html)**. No download or installation needed.
 - [Near-upright comparison](visualization/massive-rods.html) and [original interactive triple pendulum](visualization/triple.html).
 
 The browser demonstrations work offline. Their display data are embedded; Python is required only to reproduce calculations. Mouse interaction belongs to the original massless model; the massive-rod demonstration currently plays verified saved trajectories.
@@ -67,3 +69,7 @@ Verification includes independent rigid-body energy calculations, mechanical pow
 This is Louis Gosset's learning project. AI tools assisted implementation, debugging, mathematical explanations and report preparation. Established methods are not claimed as original inventions. The saved computations, tests and limitations support technical discussion; understanding and explaining the work remain part of the learning process.
 
 Background: [University of Michigan CTMS — inverted pendulum](https://ctms.engin.umich.edu/CTMS/index.php?example=InvertedPendulum&section=SystemModeling), [MIT Underactuated Robotics](https://underactuated.mit.edu/). The chronological [research log](RESEARCH_LOG.md) includes superseded approaches; the README and model documentation describe the current scope.
+
+## Companion project
+
+[Next: physics-informed flow reconstruction](https://LGOSSET-21.github.io/pinn-hemodynamics/).
