@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "end_s": 12.0,
+  "settling_s": 6.38,
+  "peak_force_N": 8.0,
+  "effort_N2s": 47.08370967297616,
+  "handoff_s": 6.0,
+  "max_cart_displacement_m": 0.7210042921608516,
+  "refinement_per_state_max_error": [
+    2.1275495209471806e-06,
+    6.979485828839671e-06,
+    6.026877461540181e-07,
+    4.61256737938065e-05,
+    6.286130598276429e-07,
+    1.4977716188191437e-05,
+    4.824915993961731e-07,
+    4.926069543387257e-06
+  ],
+  "refined_settling_s": 6.38,
+  "integration_step_s": 0.00125,
+  "force_limit_N": 8,
+  "rod_mass_kg": 0.01
+}

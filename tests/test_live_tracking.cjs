@@ -1,0 +1,3 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{liveStep}=require('../visualization/live-physics.js');const D=JSON.parse(fs.readFileSync(path.resolve(__dirname,'../results/triple/experiments.json'),'utf8'));
+for(const start of [0,3,5]){let s=D.cases.swingup.lqr.data.find(row=>Math.abs(row[0]-start)<1e-6).slice(1,9),maxX=0;for(let i=0;i<Math.round((12-start)/.00125);i++){s=liveStep(s,D.gain,null,.00125,D.tracking,start+i*.00125);maxX=Math.max(maxX,Math.abs(s[0]));}assert(s.every(Number.isFinite));assert(maxX<2);assert(Math.max(...s.map(Math.abs))<.02,'Undisturbed continuation must still settle');}
+console.log('Physical swing-up continuation at 0, 3 and 5 s settles with cart-only feedback.');

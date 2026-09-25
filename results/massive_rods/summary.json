@@ -1,0 +1,100 @@
+{
+  "point": {
+    "rod_mass_kg": 0,
+    "suspended_mass_kg": 0.2,
+    "K": [
+      -10.00000000000001,
+      -15.837313146086286,
+      -544.9313092881043,
+      -15.082082012086596,
+      1639.8408382900714,
+      75.4880447300154,
+      -1221.5990658768392,
+      -101.59854334288977
+    ],
+    "controllability_rank": 8,
+    "max_real_pole": -1.0007023297474182,
+    "relative_riccati_residual": 2.8127521551881463e-10,
+    "cases": {
+      "aligned": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 2.1325,
+        "peak_force_N": 2.2111495462932886,
+        "effort_N2s": 0.11576276220430302,
+        "integration_step_s": 0.0025,
+        "refinement_max_state_difference": 3.643914509021684e-07,
+        "refined_end_s": 12.0
+      },
+      "opposed": {
+        "status": "tilt_limit",
+        "end_s": 0.295,
+        "settling_s": null,
+        "peak_force_N": 8.0,
+        "effort_N2s": 18.57196998248435,
+        "integration_step_s": 0.00125,
+        "refinement_max_state_difference": 0.0016351064513107777,
+        "refined_end_s": 0.294375
+      },
+      "push": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 6.3225,
+        "peak_force_N": 4.182800245195338,
+        "effort_N2s": 2.0563211741578886,
+        "integration_step_s": 0.0025,
+        "refinement_max_state_difference": 5.608978343590865e-07,
+        "refined_end_s": 12.0
+      }
+    }
+  },
+  "massive": {
+    "rod_mass_kg": 0.01,
+    "suspended_mass_kg": 0.23,
+    "K": [
+      -9.999999999998671,
+      -15.804101912791026,
+      -511.8233573297718,
+      -13.323162002841094,
+      1550.8949501192665,
+      68.96671511152626,
+      -1165.5425939522759,
+      -96.39574035261401
+    ],
+    "controllability_rank": 8,
+    "max_real_pole": -0.9999225767837372,
+    "relative_riccati_residual": 1.3708722618581933e-10,
+    "cases": {
+      "aligned": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 2.1225,
+        "peak_force_N": 2.2073353785841086,
+        "effort_N2s": 0.11602557457041274,
+        "integration_step_s": 0.0025,
+        "refinement_max_state_difference": 3.853698417599638e-07,
+        "refined_end_s": 12.0
+      },
+      "opposed": {
+        "status": "tilt_limit",
+        "end_s": 0.28875,
+        "settling_s": null,
+        "peak_force_N": 8.0,
+        "effort_N2s": 18.15477871362242,
+        "integration_step_s": 0.00125,
+        "refinement_max_state_difference": 0.0011475518382075833,
+        "refined_end_s": 0.288125
+      },
+      "push": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 6.32,
+        "peak_force_N": 4.183889174297586,
+        "effort_N2s": 2.051157737753424,
+        "integration_step_s": 0.0025,
+        "refinement_max_state_difference": 5.947367544556492e-07,
+        "refined_end_s": 12.0
+      }
+    }
+  }
+}
