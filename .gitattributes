@@ -4,3 +4,6 @@ visualization/double.html linguist-generated
 visualization/triple.html linguist-generated
 visualization/massive-rods.html linguist-generated
 visualization/massive-swingup.html linguist-generated
+
+# Hand-maintained demo with a large embedded numerical reference.
+visualization/massive-recovery.html linguist-detectable=false

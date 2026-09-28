@@ -6,15 +6,18 @@ How can one horizontal cart force raise and balance three freely rotating links?
 
 ![Computed massive-rod swing-up](assets/swingup.svg)
 
-**[Project overview](https://LGOSSET-21.github.io/inverted-pendulum-control/) · [Live demo](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-swingup.html) · [Read the report](https://LGOSSET-21.github.io/inverted-pendulum-control/reports/Project_Report.pdf)**
+**[Project overview](https://LGOSSET-21.github.io/inverted-pendulum-control/) · [Live demo](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-recovery.html) · [Read the report](https://LGOSSET-21.github.io/inverted-pendulum-control/reports/Project_Report.pdf)**
 
 ## Start here
 
 - **[Project report (PDF)](reports/Project_Report.pdf)** — detailed calculations; pages 1–7 cover the massless model and pages 8–9 the massive-rod extension and future work.
-- **[Massive-rod swing-up](visualization/massive-swingup.html)** — **[open the live demonstration](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-swingup.html)**. No download or installation needed.
-- [Near-upright comparison](visualization/massive-rods.html) and [original interactive triple pendulum](visualization/triple.html).
+- **[Interactive massive-rod recovery](visualization/massive-recovery.html)** — **[open the live demonstration](https://LGOSSET-21.github.io/inverted-pendulum-control/visualization/massive-recovery.html)**. Apply a force to any mass, observe the cart respond, and follow hanging recovery → swing-up → upright balance with live plots.
+- [Recorded massive-rod swing-up](visualization/massive-swingup.html) — the reproducible saved experiment used for the reported metrics.
+- [Near-upright model comparison](visualization/massive-rods.html) and [interactive massless-rod reference](visualization/triple.html). The massless version remains a useful baseline; “massless” refers to the rods, not the endpoint masses.
 
-The browser demonstrations work offline. Their display data are embedded; Python is required only to reproduce calculations. Mouse interaction belongs to the original massless model; the massive-rod demonstration currently plays verified saved trajectories.
+The browser demonstrations work offline. The new massive-rod page integrates the nonlinear equations live; the hand applies a Cartesian force through the selected point’s Jacobian, without imposing link angles. The swing-up follows the embedded, precomputed trajectory with time-varying feedback. Small pulls can be rejected; strong pulls can cause a fall. Automatic recovery uses the real state without resetting it. See [interaction, limits and verification](docs/interactive-recovery.md).
+
+The massless reference and recorded experiments remain unchanged. Comparing models changes total suspended mass as well as its distribution, so this is not a controlled hardware comparison. Python is required only to reproduce calculations.
 
 ## Results and scope
 
@@ -26,7 +29,7 @@ The browser demonstrations work offline. Their display data are embedded; Python
 | Maximum force and cart displacement during swing-up | 8 N and 0.721 m |
 | Opposing initial tilts (+1, −1, +1 degrees) | Fails at the local experiment's tilt cutoff |
 
-These are model-specific numerical results, not measured hardware performance or global stability guarantees. All hinges are passive. Rods are rigid, sensing and force actuation ideal, and collisions are not modelled. Cart viscous friction is included; joint friction, delay and sensor noise are not. The LQR stability statement applies locally to the unsaturated linearised system.
+The table reports the saved experiments, not arbitrary interactive runs. These are model-specific numerical results, not measured hardware performance or global stability guarantees. All hinges are passive. Rods are rigid, sensing and force actuation ideal, and collisions are not modelled. Cart viscous friction is included; joint friction, delay and sensor noise are not. The LQR stability statement applies locally to the unsaturated linearised system.
 
 The massive model includes each rod's centre-of-mass translation, rotation with inertia **I = mL²/12**, and gravity. The swing-up is re-optimised for this model and independently replayed with saturation. It is not animation keyframing. [Derivation and reproduction details](docs/massive-rods.md).
 
@@ -40,6 +43,9 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 python -m unittest discover -s tests -v
 node tests/test_massive_swingup_page.cjs
+node tests/test_massive_recovery_physics.cjs
+node tests/test_massive_recovery_fall.cjs
+node tests/test_massive_recovery_page.cjs
 python src/build_massive_swingup.py
 ```
 
@@ -60,7 +66,7 @@ Verification includes independent rigid-body energy calculations, mechanical pow
 
 1. Robustness maps for mass uncertainty, perturbed initial conditions and pushes during swing-up.
 2. Noisy measurements, delays and state estimation.
-3. Physical mouse interaction and recovery for the massive-rod model.
+3. Quantify the recovery region and interaction robustness for the live massive-rod model.
 4. Compare precomputed trajectory tracking with online replanning/MPC; explore energy-based alternatives without assuming a simple-pendulum law transfers directly to three links.
 5. Hardware identification and validation.
 
