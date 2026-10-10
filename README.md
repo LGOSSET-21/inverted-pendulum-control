@@ -157,3 +157,26 @@ candidate. Incomplete candidates are excluded from winner selection. Interrupted
 benchmarks produce `interrupted.json`, not a completed benchmark report. Initial
 state magnitudes above 1e6 SI are rejected before numerical work; this is a
 numerical input guard, not an expanded physical operating range.
+
+### Recorded result (offline, seed 21)
+
+See [the full benchmark table](results/agentic/benchmark.md) and
+[machine-readable metrics](results/agentic/benchmark.json).
+
+| Method | Validation failures / 4 | Composite validation cost (lower is better) |
+|---|---:|---:|
+| Original controller | 1 | 0.5422 |
+| Adaptive coordinate search, 12 candidates | 1 | 0.4691 |
+| Random search, 12 candidates | 1 | 0.4471 |
+
+Adaptive search reduces the composite cost by about 13.5% versus the original
+controller. Random search is better on this held-out set despite a slightly
+worse tuning score. All three fail the opposing-angle scenario; recovery
+success is still 3/4, not improved. Some faster recoveries require more effort.
+This demonstrates a functioning experimental loop and an honest comparator,
+not an LLM advantage. No live LLM result is included.
+
+All eight refinement runs preserve completion status; maximum state discrepancy
+is below 0.0045 SI and observed settling-time differences are at most 0.00125 s.
+The full run used 116 simulations and about 344 s on the development machine;
+runtime depends on hardware and concurrent work. [Verification record](docs/agent-v1-verification.md).
