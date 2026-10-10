@@ -1,6 +1,6 @@
 # Agent-supervised controller experiments — V1 specification
 
-Status: scope approved; written specification pending user review.
+Status: written specification approved by the user after explanation; implementation plan pending review.
 
 ## Purpose and approved scope
 
@@ -169,5 +169,5 @@ Checked against the approved scope: single agent, four tools, massive rods,
 local LQR, offline reproducibility, LLM support, metrics, logs, and benchmark.
 No placeholder requirements remain. The baseline is a Git revision; benchmark
 baseline is the original all-ones controller on the same physical model. These
-two meanings are explicitly separated. User approval of this written
-specification is the next workflow step before the implementation plan.
+two meanings are explicitly separated. The user approved continuation after
+reviewing the specification summary; the next step is implementation-plan review.
