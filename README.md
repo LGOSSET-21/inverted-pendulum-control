@@ -79,3 +79,21 @@ Background: [University of Michigan CTMS — inverted pendulum](https://ctms.eng
 ## Companion project
 
 [Next: physics-informed flow reconstruction](https://LGOSSET-21.github.io/pinn-hemodynamics/).
+
+## Agent-supervised experiments (V1)
+
+The optional supervisor tunes upright massive-rod LQR weights between simulations.
+It never replaces the timestep controller. Run from the repository root:
+
+```bash
+PYTHONPATH=src python -m agentic tune --policy offline --budget 12 --output runs
+# Optional LLM backend (explicit API model; requires OPENAI_API_KEY):
+python -m pip install -r requirements-agent.txt
+PYTHONPATH=src python -m agentic tune --policy llm --model YOUR_MODEL --budget 12 --output runs
+```
+
+Offline mode is deterministic coordinate search, not LLM reasoning. Each run
+gets a unique directory containing `events.jsonl`, `summary.json`, and per-candidate
+metrics and numerical trajectories. API errors stop explicitly without switching
+policies. No API key is stored. The original version is preserved on
+[`baseline/pre-agent-v1`](https://github.com/LGOSSET-21/inverted-pendulum-control/tree/baseline/pre-agent-v1).
