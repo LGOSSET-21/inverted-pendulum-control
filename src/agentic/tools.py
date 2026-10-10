@@ -74,6 +74,12 @@ class ExperimentTools:
         for scenario in self._scenarios:
             try:
                 result = self.simulator(scenario, self.parameters, duration=self.duration, dt=self.dt)
+            except KeyboardInterrupt:
+                record.update(status='interrupted', eligible=False, scenarios=metrics, rank=None,
+                              simulation_attempts=len(metrics)+1,
+                              runtime_s=perf_counter()-start)
+                self.store.save_experiment(record, trajectories)
+                raise
             except (ArithmeticError, ValueError, np.linalg.LinAlgError) as exc:
                 result = SimulationResult(np.array([0.]),np.array([scenario.initial_state]),
                     np.zeros(1),np.zeros(1),'numerical_failure',type(exc).__name__)
@@ -89,9 +95,11 @@ class ExperimentTools:
         if not isinstance(experiment_ids, list) or not 1 <= len(experiment_ids) <= 100:
             raise ValueError('Provide 1–100 experiment IDs')
         records = [self.store.get(key) for key in experiment_ids]
+        if any(not r.get('eligible', True) for r in records):
+            raise ValueError('Cannot rank an interrupted experiment')
         ordered = sorted(records, key=lambda r: (r['rank'], r['id']))
         return dict(winner=ordered[0]['id'], ordered=[dict(id=r['id'],rank=r['rank']) for r in ordered])
 
     def best(self):
-        records = self.store.records()
+        records = [r for r in self.store.records() if r.get('eligible', True)]
         return min(records, key=lambda r: (r['rank'],r['id'])) if records else None

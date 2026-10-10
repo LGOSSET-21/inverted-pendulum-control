@@ -63,3 +63,13 @@ class SimulationTests(unittest.TestCase):
         good=evaluate(r); bad=dict(good,status='tilt_limit',settling_s=None)
         expensive=dict(good,effort_N2s=1000,peak_cart_m=.6)
         self.assertLess(rank([expensive]),rank([bad]))
+
+    def test_calculated_pulse_boundaries_match_literal(self):
+        a=run_simulation(Scenario('a',(0.,)*8,Pulse(1,.1+.2,.4)),duration=1,dt=.1)
+        b=run_simulation(Scenario('b',(0.,)*8,Pulse(1,.3,.4)),duration=1,dt=.1)
+        np.testing.assert_array_equal(a.disturbance,b.disturbance)
+        np.testing.assert_allclose(a.states,b.states)
+
+    def test_extreme_states_rejected_before_numerics(self):
+        for state in [(0,0,1e308,0,0,0,0,0),(1e308,)*8]:
+            with self.assertRaises(ValueError): Scenario('extreme',state)

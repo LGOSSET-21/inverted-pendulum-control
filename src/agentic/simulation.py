@@ -55,6 +55,8 @@ class Scenario:
         if len(self.initial_state) != 8:
             raise ValueError('State must have eight SI components')
         object.__setattr__(self, 'initial_state', tuple(finite_number(v, 'state') for v in self.initial_state))
+        if any(abs(v) > 1e6 for v in self.initial_state):
+            raise ValueError('Initial state components must have magnitude <= 1e6 SI')
         if self.pulse is not None and not isinstance(self.pulse, Pulse):
             raise ValueError('pulse must be a Pulse')
 
@@ -92,6 +94,9 @@ def run_simulation(scenario, parameters=ControllerParameters(), *, duration=12.,
     model = Model(rod_mass=.01)
     state = np.array(scenario.initial_state)
     rows, status, error = [], 'completed', None
+    pulse = scenario.pulse
+    pulse_start = round(pulse.start_s / dt) if pulse else 0
+    pulse_end = round(pulse.end_s / dt) if pulse else 0
     try:
         weights = Q.copy()
         weights[0] *= parameters.cart
@@ -106,8 +111,7 @@ def run_simulation(scenario, parameters=ControllerParameters(), *, duration=12.,
         for i in range(round(duration / dt)+1):
             t = round(i * dt, 12)
             force = float(np.clip(-gain @ state, -8, 8))
-            pulse = scenario.pulse
-            push = pulse.force_N if pulse and pulse.start_s <= t < pulse.end_s else 0.
+            push = pulse.force_N if pulse and pulse_start <= i < pulse_end else 0.
             rows.append([t, *state, force, push])
             if np.max(np.abs(state[2::2])) > np.deg2rad(60):
                 status = 'tilt_limit'; break

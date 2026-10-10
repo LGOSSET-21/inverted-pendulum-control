@@ -78,3 +78,26 @@ class AgentTests(unittest.TestCase):
         with self.assertRaises(ValueError): run_llm(self.tools(),None,model='')
         result=run_offline(self.tools(candidate_budget=3,tool_budget=2))
         self.assertEqual(result['candidates'],1)
+
+    def test_interruption_preserves_best_completed_candidate(self):
+        tools=self.tools(candidate_budget=3)
+        calls=[0]
+        def interrupted(scenario,parameters,**kwargs):
+            calls[0]+=1
+            if calls[0]==6: raise KeyboardInterrupt()
+            return simple_simulator(scenario,parameters,**kwargs)
+        tools.simulator=interrupted
+        result=run_offline(tools)
+        self.assertEqual(result['status'],'interrupted')
+        self.assertEqual(result['simulations'],6)
+        self.assertEqual(result['completed_candidates'],1)
+        self.assertEqual(result['best']['id'],'exp-0001')
+        records=tools.store.records()
+        self.assertFalse(records[-1]['eligible'])
+        self.assertEqual(records[-1]['status'],'interrupted')
+        self.assertEqual(len(records[-1]['trajectories']),1)
+        self.assertTrue((tools.store.run_dir/'summary.json').exists())
+        class InterruptedTransport:
+            def respond(self,*args): raise KeyboardInterrupt()
+        other=self.tools()
+        self.assertEqual(run_llm(other,InterruptedTransport(),model='test')['status'],'interrupted')

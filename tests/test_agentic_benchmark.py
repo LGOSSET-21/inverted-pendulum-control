@@ -67,3 +67,11 @@ class BenchmarkTests(unittest.TestCase):
             self.assertEqual(report['candidate_budget'],1)
             self.assertEqual(report['methods']['random']['candidates'],1)
             self.assertEqual(report['methods']['offline']['candidates'],1)
+
+    def test_benchmark_interruption_is_explicit(self):
+        def interrupted(*args,**kwargs): raise KeyboardInterrupt()
+        with tempfile.TemporaryDirectory() as directory:
+            result=run_benchmark(directory,budget=1,simulator=interrupted)
+            self.assertEqual(result['status'],'interrupted')
+            self.assertTrue((Path(result['run_dir'])/'interrupted.json').exists())
+            self.assertFalse((Path(result['run_dir'])/'benchmark.json').exists())

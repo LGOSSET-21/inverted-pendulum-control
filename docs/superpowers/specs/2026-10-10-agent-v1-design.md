@@ -1,6 +1,6 @@
 # Agent-supervised controller experiments — V1 specification
 
-Status: written specification approved by the user after explanation; implementation plan pending review.
+Status: written specification approved by the user after explanation; implementation plan approved; native execution selected.
 
 ## Purpose and approved scope
 

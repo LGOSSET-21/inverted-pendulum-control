@@ -57,7 +57,7 @@ class ExperimentStore:
                                     control_force=result.control_force, disturbance=result.disturbance)
             record['trajectories'][name] = str(path.relative_to(self.run_dir))
         write_json(artifact_dir / 'experiment.json', record)
-        self.event('experiment_complete', record)
+        self.event('experiment_complete' if record.get('eligible', True) else 'experiment_interrupted', record)
         self._records[record['id']] = record
         return copy.deepcopy(record)
 

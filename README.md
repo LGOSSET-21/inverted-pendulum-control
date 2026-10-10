@@ -136,3 +136,24 @@ Protocol behavior is tested with scripted responses, without paid calls. Live
 API execution is not part of the recorded offline benchmark. This V1 covers
 local upright recovery, not swing-up, recovery after a fall, or hardware safety.
 One seed and four held-out cases cannot establish general superiority.
+
+Python callers can also run one experiment directly:
+
+```python
+from agentic import ControllerParameters, Scenario, run_simulation, evaluate
+
+scenario = Scenario('cart_offset', (0.05, 0, 0, 0, 0, 0, 0, 0))
+trajectory = run_simulation(scenario, ControllerParameters(cart=2.0))
+print(evaluate(trajectory))
+```
+
+The state order is `[x, v, theta1, omega1, theta2, omega2, theta3, omega3]` in SI
+units, with absolute angles measured from upright. Run with `PYTHONPATH=src`.
+Pulse boundaries and simulation duration must align with the integration grid.
+
+Ctrl-C finalizes an interrupted-session summary (exit code 130), preserving
+completed candidates and any completed scenario traces from the interrupted
+candidate. Incomplete candidates are excluded from winner selection. Interrupted
+benchmarks produce `interrupted.json`, not a completed benchmark report. Initial
+state magnitudes above 1e6 SI are rejected before numerical work; this is a
+numerical input guard, not an expanded physical operating range.

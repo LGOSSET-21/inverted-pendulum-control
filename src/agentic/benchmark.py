@@ -77,7 +77,7 @@ def render_markdown(report):
     return '\n'.join(lines)
 
 
-def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, llm_summary=None):
+def _run_benchmark(root, *, budget=12, seed=21, simulator=run_simulation, llm_summary=None):
     positive_int(budget,'budget')
     if isinstance(seed,bool) or not isinstance(seed,int) or seed < 0:
         raise ValueError('seed must be a nonnegative integer')
@@ -85,7 +85,6 @@ def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, 
     # Match actual LLM candidate count when comparing an imported run.
     if imported:
         budget=imported['candidates']
-    root=ExperimentStore(output_root,metadata=dict(policy='benchmark',seed=seed))
     start=perf_counter()
     methods={'baseline':dict(parameters=asdict(ControllerParameters()),candidates=0,tuning_runtime_s=0.)}
     for policy in ('offline','random'):
@@ -94,16 +93,24 @@ def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, 
         tick=perf_counter()
         if policy=='offline':
             selected=run_offline(tools)
+            if selected['status'] == 'interrupted':
+                raise KeyboardInterrupt()
         else:
-            tools.dispatch('run_experiment',{'rationale':'Original controller baseline'})
-            rng=np.random.default_rng(seed)
-            while tools.remaining_candidates:
-                params=dict(zip(asdict(ControllerParameters()),np.exp(rng.uniform(np.log(.1),np.log(10),4)).tolist()))
-                tools.dispatch('set_controller_parameters',{'changes':params})
-                tools.dispatch('run_experiment',{'rationale':'Seeded log-uniform random search'})
-            selected=dict(best=tools.best(),candidates=len(store.records()))
-            store.event('session_end',selected)
-            write_json(store.run_dir/'summary.json',selected)
+            try:
+                tools.dispatch('run_experiment',{'rationale':'Original controller baseline'})
+                rng=np.random.default_rng(seed)
+                while tools.remaining_candidates:
+                    params=dict(zip(asdict(ControllerParameters()),np.exp(rng.uniform(np.log(.1),np.log(10),4)).tolist()))
+                    tools.dispatch('set_controller_parameters',{'changes':params})
+                    tools.dispatch('run_experiment',{'rationale':'Seeded log-uniform random search'})
+                selected=dict(best=tools.best(),candidates=len(store.records()))
+                store.event('session_end',selected)
+                write_json(store.run_dir/'summary.json',selected)
+            except KeyboardInterrupt:
+                partial=dict(status='interrupted',best=tools.best(),candidates=len(store.records()))
+                store.event('session_end',partial)
+                write_json(store.run_dir/'summary.json',partial)
+                raise
         methods[policy]=dict(parameters=selected['best']['parameters'],candidates=selected['candidates'],
             tuning_rank=selected['best']['rank'],tuning_runtime_s=perf_counter()-tick,
             tuning_log=str(store.run_dir.relative_to(root.run_dir)))
@@ -120,16 +127,21 @@ def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, 
         tick=perf_counter(); metrics={}; trajectories={}; refinement={}
         params=ControllerParameters(**method['parameters'])
         for scenario in validation_scenarios():
-            after=scenario.pulse.end_s if scenario.pulse else 0.
-            result=simulator(scenario,params,duration=12.,dt=.0025)
-            counts['validation_simulations']+=1
-            trajectories[scenario.name]=result
-            metrics[scenario.name]=evaluate(result,after=after)
-            if name!='baseline':
-                fine=simulator(scenario,params,duration=12.,dt=.00125)
-                counts['refinement_simulations']+=1
-                refinement[scenario.name]=refinement_report(result,fine,after=after)
-                trajectories[scenario.name+'_refined']=fine
+            try:
+                after=scenario.pulse.end_s if scenario.pulse else 0.
+                result=simulator(scenario,params,duration=12.,dt=.0025)
+                counts['validation_simulations']+=1
+                trajectories[scenario.name]=result
+                metrics[scenario.name]=evaluate(result,after=after)
+                if name!='baseline':
+                    fine=simulator(scenario,params,duration=12.,dt=.00125)
+                    counts['refinement_simulations']+=1
+                    refinement[scenario.name]=refinement_report(result,fine,after=after)
+                    trajectories[scenario.name+'_refined']=fine
+            except KeyboardInterrupt:
+                root.save_experiment(dict(id='validation-'+name,status='interrupted',eligible=False,
+                    validation=metrics),trajectories)
+                raise
         method.update(validation=metrics,validation_rank=list(rank(list(metrics.values()))),
                       refinement=refinement,evaluation_runtime_s=perf_counter()-tick)
         root.save_experiment(dict(id='validation-'+name,**method),trajectories)
@@ -141,3 +153,20 @@ def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, 
     root.event('benchmark_complete',dict(counts=counts,runtime_s=report['runtime_s']))
     return dict(run_dir=str(root.run_dir),counts=counts,
                 validation_ranks={name:m['validation_rank'] for name,m in methods.items()})
+
+
+def run_benchmark(output_root, *, budget=12, seed=21, simulator=run_simulation, llm_summary=None):
+    positive_int(budget, 'budget')
+    if isinstance(seed, bool) or not isinstance(seed, int) or seed < 0:
+        raise ValueError('seed must be a nonnegative integer')
+    if llm_summary:
+        load_llm_summary(llm_summary)
+    root = ExperimentStore(output_root, metadata=dict(policy='benchmark', seed=seed))
+    try:
+        return _run_benchmark(root, budget=budget, seed=seed, simulator=simulator, llm_summary=llm_summary)
+    except KeyboardInterrupt:
+        result = dict(status='interrupted', run_dir=str(root.run_dir),
+                      saved_evaluations=[r['id'] for r in root.records()])
+        root.event('benchmark_interrupted', result)
+        write_json(root.run_dir / 'interrupted.json', result)
+        return result

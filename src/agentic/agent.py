@@ -18,14 +18,15 @@ def _baseline(tools):
 def _finish(tools, policy, status, model=None):
     result = dict(policy=policy, model=model, status=status, best=tools.best(),
                   candidates=len(tools.store.records()),
-                  simulations=4*len(tools.store.records()),
+                  simulations=sum(r.get('simulation_attempts',len(r['scenarios'])) for r in tools.store.records()),
+                  completed_candidates=sum(r.get('eligible',True) for r in tools.store.records()),
                   remaining_calls=tools.remaining_calls, provenance=tools.store.metadata)
     tools.store.event('session_end',result)
     write_json(tools.store.run_dir/'summary.json',result)
     return result
 
 
-def run_offline(tools):
+def _run_offline(tools):
     _baseline(tools)
     axes = list(asdict(ControllerParameters()))
     cycle_start, step, index = tools.best()['rank'], 2., 0
@@ -58,7 +59,7 @@ You cannot change scenarios, physical equations, force/track/tilt limits or metr
 thresholds. No executable code, files, or external tools are available.'''
 
 
-def run_llm(tools, transport, *, model):
+def _run_llm(tools, transport, *, model):
     if not isinstance(model,str) or not model.strip():
         raise ValueError('An explicit model identifier is required')
     baseline = _baseline(tools)
@@ -100,3 +101,17 @@ def run_llm(tools, transport, *, model):
         if status == 'protocol_error':
             break
     return _finish(tools,'llm',status,model)
+
+
+def run_offline(tools):
+    try:
+        return _run_offline(tools)
+    except KeyboardInterrupt:
+        return _finish(tools, 'offline', 'interrupted')
+
+
+def run_llm(tools, transport, *, model):
+    try:
+        return _run_llm(tools, transport, model=model)
+    except KeyboardInterrupt:
+        return _finish(tools, 'llm', 'interrupted', model)
