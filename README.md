@@ -97,3 +97,42 @@ gets a unique directory containing `events.jsonl`, `summary.json`, and per-candi
 metrics and numerical trajectories. API errors stop explicitly without switching
 policies. No API key is stored. The original version is preserved on
 [`baseline/pre-agent-v1`](https://github.com/LGOSSET-21/inverted-pendulum-control/tree/baseline/pre-agent-v1).
+
+### Reproduce the benchmark
+
+```bash
+PYTHONPATH=src python -m agentic benchmark --budget 12 --seed 21 --output runs
+# Compare a completed LLM session from the same clean source revision:
+PYTHONPATH=src python -m agentic benchmark --llm-summary runs/run-ID/summary.json --output runs
+```
+
+The benchmark runs four tuning scenarios per candidate, freezes selection, then
+compares the original controller, adaptive search and log-uniform random search
+on four held-out scenarios. Search budgets include the baseline candidate. An
+imported LLM run sets both comparator budgets to its actual candidate count.
+Each selected controller is independently replayed with half the integration step.
+Allow several minutes for the default 116 simulations (96 tuning, 12 validation,
+8 refinement). Results are written to `benchmark.json` and `benchmark.md` in a
+new run directory; full traces and logs stay in ignored `runs/` directories.
+
+The four tunable factors multiply cart position, link angle, velocity and force
+weights in the original LQR cost; each is bounded to [0.1, 10]. Force remains
+limited to 8 N, and simulations terminate at 60 degrees or 2 m cart travel.
+Settling requires all links within 1 degree, angular speeds below 0.05 rad/s,
+cart position within 0.02 m and speed below 0.03 m/s through the end of the run,
+with at least one second observed. Recovery times start at the end of a pulse.
+Ranking first minimizes failed/unsettled scenarios, then travel violations
+(0.5 m), then mean normalized time, displacement and squared-force cost.
+
+Tools are `set_controller_parameters`, `run_experiment`, `get_experiment` and
+`compare_experiments`. A session defaults to 12 candidates and 60 tool calls;
+invalid calls consume the call budget. The program selects the best measured
+candidate even if the LLM claims a different result. LLM requests use a 60 s
+request timeout, one retry and 2000 output tokens per response. API calls can
+incur charges; offline mode uses no API. Model access depends on your API account.
+
+The optional backend follows the official [Responses function-calling protocol](https://developers.openai.com/api/docs/guides/function-calling).
+Protocol behavior is tested with scripted responses, without paid calls. Live
+API execution is not part of the recorded offline benchmark. This V1 covers
+local upright recovery, not swing-up, recovery after a fall, or hardware safety.
+One seed and four held-out cases cannot establish general superiority.

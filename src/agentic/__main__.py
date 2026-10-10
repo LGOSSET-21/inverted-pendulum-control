@@ -16,6 +16,7 @@ def main(argv=None):
     parser.add_argument('--budget',type=int,default=12)
     parser.add_argument('--tool-budget',type=int,default=60)
     parser.add_argument('--seed',type=int,default=21)
+    parser.add_argument('--llm-summary',type=Path,help='Compare a compatible saved LLM run offline')
     parser.add_argument('--output',type=Path,default=Path('runs'))
     args=parser.parse_args(argv)
     try:
@@ -24,8 +25,10 @@ def main(argv=None):
             if args.policy != 'offline' or args.model:
                 raise ValueError('Benchmark is offline; run tune --policy llm separately')
             from .benchmark import run_benchmark
-            result=run_benchmark(args.output,budget=args.budget,seed=args.seed)
+            result=run_benchmark(args.output,budget=args.budget,seed=args.seed,llm_summary=args.llm_summary)
             print(json.dumps(result,indent=2,allow_nan=False)); return 0
+        if args.llm_summary:
+            raise ValueError('--llm-summary is only valid for benchmark')
         if args.policy == 'llm' and not args.model:
             raise ValueError('--model is required for LLM mode')
         transport=OpenAITransport() if args.policy == 'llm' else None
