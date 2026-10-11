@@ -180,3 +180,18 @@ All eight refinement runs preserve completion status; maximum state discrepancy
 is below 0.0045 SI and observed settling-time differences are at most 0.00125 s.
 The full run used 116 simulations and about 344 s on the development machine;
 runtime depends on hardware and concurrent work. [Verification record](docs/agent-v1-verification.md).
+
+### Codex-supervised demonstration
+
+A separate conversation-driven experiment selected four parameter sets, then
+froze the winner for validation. Its composite validation cost is **0.4676**
+versus **0.5422** for the original controller (13.76% lower); push settling drops
+from **1.640 to 0.465 s**. Both still recover **3/4** validation scenarios.
+Eight step-refinement comparisons preserve completion/settling status.
+
+![Original versus Codex-selected controller](results/agentic/codex-demo/validation-overview.png)
+
+[Decisions, recovery curves, archived traces and reproduction instructions](results/agentic/codex-demo/README.md)
+are included. Prior benchmark results were visible, and the earlier random-search
+result remains better. This demonstrates LLM-guided experimentation in Codex,
+not a blind comparison or a live test of the optional API policy.

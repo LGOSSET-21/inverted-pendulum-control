@@ -1,0 +1,167 @@
+{
+  "policy": "codex_interactive",
+  "model": null,
+  "status": "budget_exhausted",
+  "best": {
+    "id": "exp-0004",
+    "parameters": {
+      "cart": 2.0,
+      "angles": 1.0,
+      "velocities": 1.0,
+      "effort": 0.25
+    },
+    "rationale": "R=0.25 improves aggregate cost to 0.4300 and push settling to 0.59 s, but aligned and offset cases still take 2.03 and 1.68 s. Keep this R and double cart-position weight to test faster recentering. This setting choice is informed by current observations and prior visible project results, not a blind comparison.",
+    "settings": {
+      "duration": 12.0,
+      "dt": 0.0025,
+      "rod_mass": 0.01
+    },
+    "scenario_definitions": [
+      {
+        "name": "train_aligned",
+        "initial_state": [
+          0.0,
+          0.0,
+          0.017453292519943295,
+          0.0,
+          0.017453292519943295,
+          0.0,
+          0.017453292519943295,
+          0.0
+        ],
+        "pulse": null
+      },
+      {
+        "name": "train_opposed",
+        "initial_state": [
+          0.0,
+          0.0,
+          0.017453292519943295,
+          0.0,
+          -0.017453292519943295,
+          0.0,
+          0.017453292519943295,
+          0.0
+        ],
+        "pulse": null
+      },
+      {
+        "name": "train_push",
+        "initial_state": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pulse": {
+          "force_N": 3.0,
+          "start_s": 4.0,
+          "end_s": 4.2
+        }
+      },
+      {
+        "name": "train_offset",
+        "initial_state": [
+          0.05,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pulse": null
+      }
+    ],
+    "scenarios": {
+      "train_aligned": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 1.6675,
+        "settling_absolute_s": 1.6675,
+        "peak_angle_deg": 1.6953628049858958,
+        "peak_cart_m": 0.03709082407422522,
+        "peak_force_N": 4.552040234456541,
+        "effort_N2s": 0.24384600932142722,
+        "saturation_fraction": 0.0,
+        "constraint_satisfied": true,
+        "error": null
+      },
+      "train_opposed": {
+        "status": "tilt_limit",
+        "end_s": 0.2925,
+        "settling_s": null,
+        "settling_absolute_s": null,
+        "peak_angle_deg": 60.64464180447678,
+        "peak_cart_m": 0.05834425693133277,
+        "peak_force_N": 8.0,
+        "effort_N2s": 18.54403458731543,
+        "saturation_fraction": 0.9829059829059829,
+        "constraint_satisfied": false,
+        "error": null
+      },
+      "train_push": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 0.5549999999999997,
+        "settling_absolute_s": 4.755,
+        "peak_angle_deg": 1.2727294414015629,
+        "peak_cart_m": 0.016001967686194437,
+        "peak_force_N": 4.014652460867031,
+        "effort_N2s": 1.8647618714324263,
+        "saturation_fraction": 0.0,
+        "constraint_satisfied": true,
+        "error": null
+      },
+      "train_offset": {
+        "status": "completed",
+        "end_s": 12.0,
+        "settling_s": 1.5075,
+        "settling_absolute_s": 1.5075,
+        "peak_angle_deg": 0.4835798259698184,
+        "peak_cart_m": 0.05259851601253312,
+        "peak_force_N": 1.4142135623729581,
+        "effort_N2s": 0.02616963408822912,
+        "saturation_fraction": 0.0,
+        "constraint_satisfied": true,
+        "error": null
+      }
+    },
+    "rank": [
+      1,
+      0,
+      0.41645749983331387
+    ],
+    "runtime_s": 10.390994093000003,
+    "trajectories": {
+      "train_aligned": "exp-0004/trajectory-0.npz",
+      "train_opposed": "exp-0004/trajectory-1.npz",
+      "train_push": "exp-0004/trajectory-2.npz",
+      "train_offset": "exp-0004/trajectory-3.npz"
+    }
+  },
+  "candidates": 4,
+  "simulations": 16,
+  "completed_candidates": 4,
+  "remaining_calls": 22,
+  "provenance": {
+    "git_revision": "12ca606db855747233f89745d463e3a095e0a974",
+    "git_dirty": false,
+    "versions": {
+      "python": "3.9.7",
+      "numpy": "2.0.2",
+      "scipy": "1.13.1"
+    },
+    "policy": "codex_interactive",
+    "model": null,
+    "model_note": "Decisions made by the assistant in this Codex conversation; exact model identifier unavailable",
+    "prior_results_visible": true,
+    "scientific_scope": "Demonstration only; previous benchmark results are visible to the assistant",
+    "seed": null
+  }
+}

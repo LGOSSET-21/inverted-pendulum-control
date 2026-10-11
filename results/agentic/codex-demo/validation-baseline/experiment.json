@@ -1,0 +1,116 @@
+{
+  "id": "validation-baseline",
+  "parameters": {
+    "cart": 1.0,
+    "angles": 1.0,
+    "velocities": 1.0,
+    "effort": 1.0
+  },
+  "metrics": {
+    "validation_aligned": {
+      "status": "completed",
+      "end_s": 12.0,
+      "settling_s": 2.445,
+      "settling_absolute_s": 2.445,
+      "peak_angle_deg": 2.310568598354164,
+      "peak_cart_m": 0.06365494850948338,
+      "peak_force_N": 3.3110030678761646,
+      "effort_N2s": 0.2610254145276219,
+      "saturation_fraction": 0.0,
+      "constraint_satisfied": true,
+      "error": null
+    },
+    "validation_opposed": {
+      "status": "tilt_limit",
+      "end_s": 0.3,
+      "settling_s": null,
+      "settling_absolute_s": null,
+      "peak_angle_deg": 60.4785123871427,
+      "peak_cart_m": 0.15069636471946202,
+      "peak_force_N": 8.0,
+      "effort_N2s": 18.729680603759746,
+      "saturation_fraction": 0.9583333333333333,
+      "constraint_satisfied": false,
+      "error": null
+    },
+    "validation_push": {
+      "status": "completed",
+      "end_s": 12.0,
+      "settling_s": 1.6399999999999997,
+      "settling_absolute_s": 6.84,
+      "peak_angle_deg": 1.538308215094843,
+      "peak_cart_m": 0.024563632095416392,
+      "peak_force_N": 2.789167084389176,
+      "effort_N2s": 0.911711059150481,
+      "saturation_fraction": 0.0,
+      "constraint_satisfied": true,
+      "error": null
+    },
+    "validation_offset": {
+      "status": "completed",
+      "end_s": 12.0,
+      "settling_s": 2.03,
+      "settling_absolute_s": 2.03,
+      "peak_angle_deg": 0.5181786625818205,
+      "peak_cart_m": 0.07769806628116642,
+      "peak_force_N": 0.7499999999999003,
+      "effort_N2s": 0.01689953334605336,
+      "saturation_fraction": 0.0,
+      "constraint_satisfied": true,
+      "error": null
+    }
+  },
+  "rank": [
+    1,
+    0,
+    0.5421864916786703
+  ],
+  "refinement": {
+    "validation_aligned": {
+      "max_state_difference": 5.827155806631401e-07,
+      "settling_difference_s": 0.0,
+      "settling_disagreement": false,
+      "status_disagreement": false,
+      "coarse_status": "completed",
+      "fine_status": "completed",
+      "warning": false
+    },
+    "validation_opposed": {
+      "max_state_difference": 0.0013337003084989973,
+      "settling_difference_s": null,
+      "settling_disagreement": false,
+      "status_disagreement": false,
+      "coarse_status": "tilt_limit",
+      "fine_status": "tilt_limit",
+      "warning": false
+    },
+    "validation_push": {
+      "max_state_difference": 4.003688723885901e-07,
+      "settling_difference_s": 0.0,
+      "settling_disagreement": false,
+      "status_disagreement": false,
+      "coarse_status": "completed",
+      "fine_status": "completed",
+      "warning": false
+    },
+    "validation_offset": {
+      "max_state_difference": 1.463200986658031e-07,
+      "settling_difference_s": 0.0012499999999997513,
+      "settling_disagreement": false,
+      "status_disagreement": false,
+      "coarse_status": "completed",
+      "fine_status": "completed",
+      "warning": false
+    }
+  },
+  "trajectories": {
+    "validation_aligned": "validation-baseline/trajectory-0.npz",
+    "validation_aligned_fine": "validation-baseline/trajectory-1.npz",
+    "validation_opposed": "validation-baseline/trajectory-2.npz",
+    "validation_opposed_fine": "validation-baseline/trajectory-3.npz",
+    "validation_push": "validation-baseline/trajectory-4.npz",
+    "validation_push_fine": "validation-baseline/trajectory-5.npz",
+    "validation_offset": "validation-baseline/trajectory-6.npz",
+    "validation_offset_fine": "validation-baseline/trajectory-7.npz"
+  }
+}
