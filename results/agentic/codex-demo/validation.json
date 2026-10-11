@@ -1,0 +1,229 @@
+{
+  "provenance": {
+    "git_revision": "12ca606db855747233f89745d463e3a095e0a974",
+    "git_dirty": false,
+    "versions": {
+      "python": "3.9.7",
+      "numpy": "2.0.2",
+      "scipy": "1.13.1"
+    },
+    "policy": "codex_demo_validation",
+    "source_summary": "runs/run-4b5bd4e6bfc742cabedb6f5f8fb2ce15/summary.json",
+    "prior_results_visible": true
+  },
+  "methods": {
+    "baseline": {
+      "id": "validation-baseline",
+      "parameters": {
+        "cart": 1.0,
+        "angles": 1.0,
+        "velocities": 1.0,
+        "effort": 1.0
+      },
+      "metrics": {
+        "validation_aligned": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 2.445,
+          "settling_absolute_s": 2.445,
+          "peak_angle_deg": 2.310568598354164,
+          "peak_cart_m": 0.06365494850948338,
+          "peak_force_N": 3.3110030678761646,
+          "effort_N2s": 0.2610254145276219,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        },
+        "validation_opposed": {
+          "status": "tilt_limit",
+          "end_s": 0.3,
+          "settling_s": null,
+          "settling_absolute_s": null,
+          "peak_angle_deg": 60.4785123871427,
+          "peak_cart_m": 0.15069636471946202,
+          "peak_force_N": 8.0,
+          "effort_N2s": 18.729680603759746,
+          "saturation_fraction": 0.9583333333333333,
+          "constraint_satisfied": false,
+          "error": null
+        },
+        "validation_push": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 1.6399999999999997,
+          "settling_absolute_s": 6.84,
+          "peak_angle_deg": 1.538308215094843,
+          "peak_cart_m": 0.024563632095416392,
+          "peak_force_N": 2.789167084389176,
+          "effort_N2s": 0.911711059150481,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        },
+        "validation_offset": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 2.03,
+          "settling_absolute_s": 2.03,
+          "peak_angle_deg": 0.5181786625818205,
+          "peak_cart_m": 0.07769806628116642,
+          "peak_force_N": 0.7499999999999003,
+          "effort_N2s": 0.01689953334605336,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        }
+      },
+      "rank": [
+        1,
+        0,
+        0.5421864916786703
+      ],
+      "refinement": {
+        "validation_aligned": {
+          "max_state_difference": 5.827155806631401e-07,
+          "settling_difference_s": 0.0,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        },
+        "validation_opposed": {
+          "max_state_difference": 0.0013337003084989973,
+          "settling_difference_s": null,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "tilt_limit",
+          "fine_status": "tilt_limit",
+          "warning": false
+        },
+        "validation_push": {
+          "max_state_difference": 4.003688723885901e-07,
+          "settling_difference_s": 0.0,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        },
+        "validation_offset": {
+          "max_state_difference": 1.463200986658031e-07,
+          "settling_difference_s": 0.0012499999999997513,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        }
+      }
+    },
+    "codex_demo": {
+      "id": "validation-codex_demo",
+      "parameters": {
+        "cart": 2.0,
+        "angles": 1.0,
+        "velocities": 1.0,
+        "effort": 0.25
+      },
+      "metrics": {
+        "validation_aligned": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 2.0025,
+          "settling_absolute_s": 2.0025,
+          "peak_angle_deg": 2.541875435807817,
+          "peak_cart_m": 0.0556572720658536,
+          "peak_force_N": 6.828060351684819,
+          "effort_N2s": 0.5483698899250312,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        },
+        "validation_opposed": {
+          "status": "tilt_limit",
+          "end_s": 0.285,
+          "settling_s": null,
+          "settling_absolute_s": null,
+          "peak_angle_deg": 61.50528662202977,
+          "peak_cart_m": 0.09555950606519288,
+          "peak_force_N": 8.0,
+          "effort_N2s": 18.0001977095608,
+          "saturation_fraction": 0.9824561403508771,
+          "constraint_satisfied": false,
+          "error": null
+        },
+        "validation_push": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 0.46499999999999986,
+          "settling_absolute_s": 5.665,
+          "peak_angle_deg": 0.8486433201069637,
+          "peak_cart_m": 0.010667500154194714,
+          "peak_force_N": 2.6763963020594645,
+          "effort_N2s": 0.8287922542042312,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        },
+        "validation_offset": {
+          "status": "completed",
+          "end_s": 12.0,
+          "settling_s": 1.895,
+          "settling_absolute_s": 1.895,
+          "peak_angle_deg": 0.7253303358789576,
+          "peak_cart_m": 0.07889760100973726,
+          "peak_force_N": 2.121320343559437,
+          "effort_N2s": 0.05888201867572445,
+          "saturation_fraction": 0.0,
+          "constraint_satisfied": true,
+          "error": null
+        }
+      },
+      "rank": [
+        1,
+        0,
+        0.46760325796531665
+      ],
+      "refinement": {
+        "validation_aligned": {
+          "max_state_difference": 3.1403940398133656e-06,
+          "settling_difference_s": 0.0,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        },
+        "validation_opposed": {
+          "max_state_difference": 0.00523180371983889,
+          "settling_difference_s": null,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "tilt_limit",
+          "fine_status": "tilt_limit",
+          "warning": false
+        },
+        "validation_push": {
+          "max_state_difference": 9.70144350503216e-07,
+          "settling_difference_s": 0.0012499999999997513,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        },
+        "validation_offset": {
+          "max_state_difference": 1.0218215282103982e-06,
+          "settling_difference_s": 0.0,
+          "settling_disagreement": false,
+          "status_disagreement": false,
+          "coarse_status": "completed",
+          "fine_status": "completed",
+          "warning": false
+        }
+      }
+    }
+  },
+  "simulations": 16
+}

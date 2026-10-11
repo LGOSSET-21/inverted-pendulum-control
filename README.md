@@ -79,3 +79,119 @@ Background: [University of Michigan CTMS — inverted pendulum](https://ctms.eng
 ## Companion project
 
 [Next: physics-informed flow reconstruction](https://LGOSSET-21.github.io/pinn-hemodynamics/).
+
+## Agent-supervised experiments (V1)
+
+The optional supervisor tunes upright massive-rod LQR weights between simulations.
+It never replaces the timestep controller. Run from the repository root:
+
+```bash
+PYTHONPATH=src python -m agentic tune --policy offline --budget 12 --output runs
+# Optional LLM backend (explicit API model; requires OPENAI_API_KEY):
+python -m pip install -r requirements-agent.txt
+PYTHONPATH=src python -m agentic tune --policy llm --model YOUR_MODEL --budget 12 --output runs
+```
+
+Offline mode is deterministic coordinate search, not LLM reasoning. Each run
+gets a unique directory containing `events.jsonl`, `summary.json`, and per-candidate
+metrics and numerical trajectories. API errors stop explicitly without switching
+policies. No API key is stored. The original version is preserved on
+[`baseline/pre-agent-v1`](https://github.com/LGOSSET-21/inverted-pendulum-control/tree/baseline/pre-agent-v1).
+
+### Reproduce the benchmark
+
+```bash
+PYTHONPATH=src python -m agentic benchmark --budget 12 --seed 21 --output runs
+# Compare a completed LLM session from the same clean source revision:
+PYTHONPATH=src python -m agentic benchmark --llm-summary runs/run-ID/summary.json --output runs
+```
+
+The benchmark runs four tuning scenarios per candidate, freezes selection, then
+compares the original controller, adaptive search and log-uniform random search
+on four held-out scenarios. Search budgets include the baseline candidate. An
+imported LLM run sets both comparator budgets to its actual candidate count.
+Each selected controller is independently replayed with half the integration step.
+Allow several minutes for the default 116 simulations (96 tuning, 12 validation,
+8 refinement). Results are written to `benchmark.json` and `benchmark.md` in a
+new run directory; full traces and logs stay in ignored `runs/` directories.
+
+The four tunable factors multiply cart position, link angle, velocity and force
+weights in the original LQR cost; each is bounded to [0.1, 10]. Force remains
+limited to 8 N, and simulations terminate at 60 degrees or 2 m cart travel.
+Settling requires all links within 1 degree, angular speeds below 0.05 rad/s,
+cart position within 0.02 m and speed below 0.03 m/s through the end of the run,
+with at least one second observed. Recovery times start at the end of a pulse.
+Ranking first minimizes failed/unsettled scenarios, then travel violations
+(0.5 m), then mean normalized time, displacement and squared-force cost.
+
+Tools are `set_controller_parameters`, `run_experiment`, `get_experiment` and
+`compare_experiments`. A session defaults to 12 candidates and 60 tool calls;
+invalid calls consume the call budget. The program selects the best measured
+candidate even if the LLM claims a different result. LLM requests use a 60 s
+request timeout, one retry and 2000 output tokens per response. API calls can
+incur charges; offline mode uses no API. Model access depends on your API account.
+
+The optional backend follows the official [Responses function-calling protocol](https://developers.openai.com/api/docs/guides/function-calling).
+Protocol behavior is tested with scripted responses, without paid calls. Live
+API execution is not part of the recorded offline benchmark. This V1 covers
+local upright recovery, not swing-up, recovery after a fall, or hardware safety.
+One seed and four held-out cases cannot establish general superiority.
+
+Python callers can also run one experiment directly:
+
+```python
+from agentic import ControllerParameters, Scenario, run_simulation, evaluate
+
+scenario = Scenario('cart_offset', (0.05, 0, 0, 0, 0, 0, 0, 0))
+trajectory = run_simulation(scenario, ControllerParameters(cart=2.0))
+print(evaluate(trajectory))
+```
+
+The state order is `[x, v, theta1, omega1, theta2, omega2, theta3, omega3]` in SI
+units, with absolute angles measured from upright. Run with `PYTHONPATH=src`.
+Pulse boundaries and simulation duration must align with the integration grid.
+
+Ctrl-C finalizes an interrupted-session summary (exit code 130), preserving
+completed candidates and any completed scenario traces from the interrupted
+candidate. Incomplete candidates are excluded from winner selection. Interrupted
+benchmarks produce `interrupted.json`, not a completed benchmark report. Initial
+state magnitudes above 1e6 SI are rejected before numerical work; this is a
+numerical input guard, not an expanded physical operating range.
+
+### Recorded result (offline, seed 21)
+
+See [the full benchmark table](results/agentic/benchmark.md) and
+[machine-readable metrics](results/agentic/benchmark.json).
+
+| Method | Validation failures / 4 | Composite validation cost (lower is better) |
+|---|---:|---:|
+| Original controller | 1 | 0.5422 |
+| Adaptive coordinate search, 12 candidates | 1 | 0.4691 |
+| Random search, 12 candidates | 1 | 0.4471 |
+
+Adaptive search reduces the composite cost by about 13.5% versus the original
+controller. Random search is better on this held-out set despite a slightly
+worse tuning score. All three fail the opposing-angle scenario; recovery
+success is still 3/4, not improved. Some faster recoveries require more effort.
+This demonstrates a functioning experimental loop and an honest comparator,
+not an LLM advantage. No live API-policy result is included in this offline benchmark.
+
+All eight refinement runs preserve completion status; maximum state discrepancy
+is below 0.0045 SI and observed settling-time differences are at most 0.00125 s.
+The full run used 116 simulations and about 344 s on the development machine;
+runtime depends on hardware and concurrent work. [Verification record](docs/agent-v1-verification.md).
+
+### AI-supervised tuning demonstration
+
+A separate conversation-driven experiment selected four parameter sets, then
+froze the winner for validation. Its composite validation cost is **0.4676**
+versus **0.5422** for the original controller (13.76% lower); push settling drops
+from **1.640 to 0.465 s**. Both still recover **3/4** validation scenarios.
+Eight step-refinement comparisons preserve completion/settling status.
+
+![Original versus AI-selected controller](results/agentic/codex-demo/validation-overview.png)
+
+[Decisions, recovery curves, archived traces and reproduction instructions](results/agentic/codex-demo/README.md)
+are included. Prior benchmark results were visible, and the earlier random-search
+result remains better. This demonstrates LLM-guided experimentation in an interactive session,
+not a blind comparison or a live test of the optional API policy.
