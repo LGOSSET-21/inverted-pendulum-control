@@ -8,7 +8,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent
 COLORS = ['#64748b', '#087e8b']
-LABELS = ['Original controller', 'Codex-selected parameters']
+LABELS = ['Original controller', 'AI-selected parameters']
 plt.rcParams.update({'font.size': 10, 'axes.spines.top': False, 'axes.spines.right': False})
 records = [json.loads((ROOT / ('validation-' + n) / 'experiment.json').read_text())
            for n in ['baseline', 'codex_demo']]

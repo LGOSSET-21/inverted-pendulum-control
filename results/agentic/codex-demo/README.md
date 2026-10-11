@@ -1,6 +1,6 @@
-# Codex-supervised tuning demonstration
+# AI-supervised tuning demonstration
 
-A Codex assistant selected four LQR parameter sets sequentially after inspecting
+An OpenAI Codex assistant selected four LQR parameter sets sequentially after inspecting
 simulation results. This was supervision in a conversation, without a separate
 OpenAI API call. It is distinct from the automated `--policy llm` API integration.
 Previous benchmark results were visible to the assistant: this is **not a blind
@@ -32,7 +32,7 @@ Duration: 12 s; rod mass: 0.01 kg; identical disturbances and limits.
 | Controller | Failed / unsettled | Travel violations | Composite cost |
 |---|---:|---:|---:|
 | Original | 1 / 4 | 0 | 0.542186 |
-| Codex-selected | 1 / 4 | 0 | 0.467603 |
+| AI-selected | 1 / 4 | 0 | 0.467603 |
 
 The composite cost decreases by **13.76%**. Ranking prioritizes failure count,
 then travel violations, then the composite cost; the failure is not excluded.

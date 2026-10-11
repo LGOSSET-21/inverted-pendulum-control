@@ -174,14 +174,14 @@ controller. Random search is better on this held-out set despite a slightly
 worse tuning score. All three fail the opposing-angle scenario; recovery
 success is still 3/4, not improved. Some faster recoveries require more effort.
 This demonstrates a functioning experimental loop and an honest comparator,
-not an LLM advantage. No live LLM result is included.
+not an LLM advantage. No live API-policy result is included in this offline benchmark.
 
 All eight refinement runs preserve completion status; maximum state discrepancy
 is below 0.0045 SI and observed settling-time differences are at most 0.00125 s.
 The full run used 116 simulations and about 344 s on the development machine;
 runtime depends on hardware and concurrent work. [Verification record](docs/agent-v1-verification.md).
 
-### Codex-supervised demonstration
+### AI-supervised tuning demonstration
 
 A separate conversation-driven experiment selected four parameter sets, then
 froze the winner for validation. Its composite validation cost is **0.4676**
@@ -189,9 +189,9 @@ versus **0.5422** for the original controller (13.76% lower); push settling drop
 from **1.640 to 0.465 s**. Both still recover **3/4** validation scenarios.
 Eight step-refinement comparisons preserve completion/settling status.
 
-![Original versus Codex-selected controller](results/agentic/codex-demo/validation-overview.png)
+![Original versus AI-selected controller](results/agentic/codex-demo/validation-overview.png)
 
 [Decisions, recovery curves, archived traces and reproduction instructions](results/agentic/codex-demo/README.md)
 are included. Prior benchmark results were visible, and the earlier random-search
-result remains better. This demonstrates LLM-guided experimentation in Codex,
+result remains better. This demonstrates LLM-guided experimentation in an interactive session,
 not a blind comparison or a live test of the optional API policy.
